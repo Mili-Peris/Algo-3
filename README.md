@@ -3,6 +3,7 @@ En el repositorio van a estar las Prácticas, Trabajos Prácticos y Ejercicios d
 
 ## Prácticas
 Práctica 1: Técnicas Algorítmicas
+* [Enunciado](https://github.com/Mili-Peris/Algo-3/blob/main/practicas/prac-tecnicas-algo.pdf) y [Solución]()
 
 Práctica 2: Introducción a la teoría algorítmica de grafos
 
