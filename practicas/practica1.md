@@ -170,6 +170,132 @@ int main() {
 ```
 **c)** Tengo, en el peor caso, O(n^2!) nodos ya que, cada ramificacion se va abriendo (n^2)-1 veces al no poder tener numero repetidos, asi hasta llegar al 0.
 
-**d)** 
+**d)** Lo modificaria en la parte del if h == 0, pidiendo la condicion de que no supere al numero magico
 
 **e)**
+
+### Ejercicio 3
+
+**a)** Solución candidata= Subconjunto I de tamaño k que contiene posiciones de la matriz M.
+Solución válida = La que tenga la mayor suma al indexar en las posiciones del subconjunto I y sumarlas (si dos suman lo mismo y es el máximo que se puede sumar, ambas son válidas)
+Solución parcial = Subconjuntos menores o iguales a k que son posiciones de la matriz M.
+Solución en c++
+```cpp
+#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> I;
+int maxSuma;
+vector<vector<int>> matriz;
+int k;
+int N;
+
+int sumaConjunto(vector<int> &A){
+    int res=0;
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++){
+            res+= matriz[i][j];
+        }
+    }
+    return res;
+}
+
+void maximaSuma(int k2, vector<int>& sol_parcial, int valor){
+    if (k2==0){
+        int suma = sumaConjunto(sol_parcial);
+        if(suma > maxSuma){
+            I = sol_parcial;
+            maxSuma = suma;
+        }
+        return;
+    }
+    if (valor==N) {
+        return;
+    }
+    sol_parcial.push_back(valor);
+    maximaSuma(k2-1,sol_parcial,valor+1);
+    sol_parcial.pop_back();
+    maximaSuma(k2,sol_parcial,valor+1);
+}
+
+int main() {
+    cin >> k;
+    cin >> N;
+    matriz.resize(N, vector<int>(N,0));
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++){
+            int elemento;
+            cin >> elemento;
+            matriz[i][j] = elemento;
+        }
+    }
+    vector<int> sol_parcial(0);
+    maxSuma=0;
+    maximaSuma(k, sol_parcial, 0);
+    cout <<"La maxima suma de la matriz lo forma el conjunto {";
+    for(int i=1; i<=k ;i++) {
+        cout << I[i-1]+1 << ",";
+    }
+    // le sumo uno porque en mejor_solucion tengo los indices, pero como I empieza a sumar en 1 hay q arreglar eso
+    cout <<"} y su suma es " << maxSuma;
+    return 0;
+}
+```
+**b)** Muy grande, calcular despues.
+
+**c)** Como estamos en una matriz simetrica, no haría falta sumar las posiciones de abajo de todo. 
+
+### Ejercicio 4
+
+**a)**  Solución candidata= Subconjunto de tamaño n que contiene todas las posiciones de la matriz M (en orden o permutadas).
+Solución válida = La que tenga la menor suma al indexar en las posiciones del subconjunto en el orden que indica la formula al sumarlas (si dos suman lo mismo y es el minimo que se puede sumar, ambas son válidas)
+Solución parcial = iguales que las candidatas.
+Solución en c++
+```cpp
+#include <iostream>
+#include <vector>
+#include <math.h>
+using namespace std;
+
+int N;
+vector<vector<int>> matriz;
+int minSum;
+vector<int> minimaPermutacion;
+
+int sumaConjunto(vector<int>& conjunto){
+    int res = 0;
+    res+= matriz[N-1][0];
+    for(int i=0; i<N-1; i++){
+            res+= matriz[i][i+1];
+    }
+}
+
+//idea: voy permutando sol_parcial de diferentes maneras hasta quedarme sin rotaciones disponibles
+void minimaSuma(vector<int>& sol_parcial, int rotacionesDisp){
+    int suma = sumaConjunto(sol_parcial);
+    if(rotacionesDisp == 0){
+        if(suma < minSum){
+            minSum = suma;
+            minimaPermutacion = sol_parcial;
+        }
+        return;
+    }
+
+
+}
+
+int main() {
+    cin >> N;
+    matriz.resize(N, vector<int>(N,0));
+    for(int i=0; i<N; i++){
+        for(int j=0; j<N; j++){
+            int elemento;
+            cin >> elemento;
+            matriz[i][j] = elemento;
+        }
+    }
+    //vector<int> sol_parcial(N, de 1 a N-1)
+  //  int rotacionesDisp= N!
+}
+```
