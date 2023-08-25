@@ -267,9 +267,7 @@ int main() {
 }
 ```
 **e)** 
-$\[
-\sum_{i=1}^{n^2}x_{i}
-\]$
+$\sum_{i=1}^{n^2}x_{i}$
 
 ### Ejercicio 3
 
@@ -352,7 +350,7 @@ Solución en c++
 ```cpp
 #include <iostream>
 #include <vector>
-#include <math.h>
+
 using namespace std;
 
 int N;
@@ -364,12 +362,13 @@ int sumaConjunto(vector<int>& conjunto){
     int res = 0;
     res+= matriz[N-1][0];
     for(int i=0; i<N-1; i++){
-            res+= matriz[i][i+1];
+        res+= matriz[i][i+1];
     }
+    return res;
 }
 
-//idea: voy permutando sol_parcial de diferentes maneras hasta quedarme sin rotaciones disponibles
-void minimaSuma(vector<int>& sol_parcial, int rotacionesDisp){
+//idea: voy permutando sol_parcial de diferentes maneras hasta quedarme sin rotaciones disponibles MUY COMPLICADO
+/*void minimaSuma(vector<int>& sol_parcial, int rotacionesDisp){
     int suma = sumaConjunto(sol_parcial);
     if(rotacionesDisp == 0){
         if(suma < minSum){
@@ -378,8 +377,28 @@ void minimaSuma(vector<int>& sol_parcial, int rotacionesDisp){
         }
         return;
     }
+} */
 
-
+//tengo mi solucion parcial, que voy a ir completando con permutaciones de los numero de 1...N, agregando elementos de
+//a uno si todavia no estan (lo chequeo indexando en el vector esta)
+void minimaSuma(vector<int>& sol_parcial, vector<bool>& esta){
+    int suma = sumaConjunto(sol_parcial);
+    if(sol_parcial.size() == N){
+        if(suma < minSum || minSum == -1){
+            minSum = suma;imaPermutacion <<
+            minimaPermutacion = sol_parcial;
+        }
+        return;
+    }
+    for(int i=1;i<=N; i++){
+        if(!esta[i]){
+            sol_parcial.push_back(i);
+            esta[i] = true;
+            minimaSuma(sol_parcial, esta);
+            esta[i] = false;
+            sol_parcial.pop_back();
+        }
+    }
 }
 
 int main() {
@@ -392,7 +411,17 @@ int main() {
             matriz[i][j] = elemento;
         }
     }
-    //vector<int> sol_parcial(N, de 1 a N-1)
-  //  int rotacionesDisp= N!
+    minSum = -1;
+    minimaPermutacion.resize(N);
+    vector<int> sol_parcial(0);
+    vector<bool> esta(N, false);
+    minimaSuma(sol_parcial,esta);
+    cout << "La minima suma esta formada por el conjunto {";
+    for (int i=0; i<N;i++){
+        cout << minimaPermutacion[i];
+        // le sumo uno porque en mejor_solucion tengo los indices, pero como I empieza a sumar en 1 hay q arreglar eso
+    }
+    cout << "} y su suma es " << minSum;
+    return 0;
 }
 ```
