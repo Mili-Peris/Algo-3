@@ -170,9 +170,106 @@ int main() {
 ```
 **c)** Tengo, en el peor caso, O(n^2!) nodos ya que, cada ramificacion se va abriendo (n^2)-1 veces al no poder tener numero repetidos, asi hasta llegar al 0.
 
-**d)** Lo modificaria en la parte del if h == 0, pidiendo la condicion de que no supere al numero magico
+**d)** Resolución en C++
+```cpp
+#include <iostream>
+#include <vector>
+#include <math.h>
+using namespace std;
 
-**e)**
+int N;
+int cantidad;
+vector<int> SumaFila;
+vector<int> SumaColumna;
+
+bool esValido(const vector<vector<int>> &s){
+    //me fijo cuál es el número mágico
+    int magico = 0;
+    for(int i= 0; i< N; i++){
+        magico += s[i][0];
+    }
+    //me fijo si la suma de cada fila es el número mágico
+    for(int i=0; i < N; i++){
+        int fila = 0;
+        for(int j=0; j < N; j++){
+            fila += s[i][j];
+        }
+        if (fila != magico){
+            return false;
+        }
+    }
+    //me fijo si la suma de cada columna es el número mágico
+    for(int i=0; i < N; i++){
+        int columna = 0;
+        for(int j=0; j < N; j++){
+            columna += s[j][i];
+        }
+        if (columna != magico){
+            return false;
+        }
+    }
+    //me fijo si las diagonal izquierda suma el número mágico
+    int diagIzq = 0;
+    for(int i=0 ; i< N; i++){
+        diagIzq+= s[i][i];
+    }
+    if(diagIzq != magico){
+        return false;
+    }
+    //me fijo si las diagonal izquierda suma el número mágico
+    int diagDer = 0;
+    for(int i=0 ; i< N; i++){
+        diagDer+= s[i][N-1-i];
+    }
+    if(diagDer != magico){
+        return false;
+    }
+    return true;
+}
+
+//s: vector con la matriz que es un posible cuadrado perfecto;
+//numeros:tiene n2 pos. En cada posicion, al acceder, voy a tener un 0 si puedo usar ese número (correspondiente a la indexacion de este en el vector) o un 1 si ya fue usado (no pueden haber repetidos en la matriz)
+//N es el orden del cuadrado
+// i, j representan la posicion de la matriz que voy a querer modificar, o sea meter un numero que no esté.
+
+void CuadradosMagicos(vector<vector<int>>& s, int i, int j, int N, vector<int>& numeros){
+    if(i==N && esValido(s)){
+        cantidad++;
+        return;
+    }
+    int magico= (pow(N,3)+ N) /2;
+    for(int h=0; h< numeros.size() ;h++){
+        if(numeros[h] == 0 && SumaFila[i] + h <= magico && SumaColumna[i] + h <= magico){
+            s[i][j] = h+1;
+            numeros[h] = 1;
+            if(j== N-1){
+                CuadradosMagicos(s,i+1,0,N,numeros);
+            } else {
+                CuadradosMagicos(s,i,j+1,N,numeros);
+            }
+            //reinicio el problema en el estado que estaba para poder ir a otra rama.
+            numeros[h] = 0;
+            s[i][j]= 0;
+        }
+    }
+}
+
+int main() {
+    cin >> N;
+    vector<int> numeros(pow(N,2),0);
+    SumaFila.resize(N,0);
+    SumaColumna.resize(N,0);
+    vector<vector<int>> s(N,vector<int>(N,0));
+    cantidad = 0;
+    CuadradosMagicos(s,0,0,N,numeros);
+    cout << "La cantidad de cuadrados magicos de orden " << N << " es: "<< cantidad;
+    return 0;
+}
+```
+**e)** 
+$\[
+\sum_{i=1}^{n^2}x_{i}
+\]$
 
 ### Ejercicio 3
 
