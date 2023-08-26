@@ -425,3 +425,82 @@ int main() {
     return 0;
 }
 ```
+
+### Ejercicio 5
+
+### Ejercicio 6
+
+### Ejercicio 7
+En este ejercicio tengo la compra/venta de asteroides con diferentes condiciones. Tengo que maxmizar las ganancias en base a lo que salen los asteroides cada día.
+
+**a)** No puede pasar que tenga negativas cantidades de asteroides (no puedo vender un asteroide que no tengo) ni la cantidad de asteroides puede superar a la cantidad de días que tengo. En estos casos se indefine
+En el día j tengo c asteroides:
+-Si en el dia j-1 tengo c-1 asteroides, significa que compre un asteroide en el dia j (para llegar a tener c), por lo que baja mi ganancia.
+-Si en el día j-1 tengo c+1 asteroides, significa que vendi un asteroide en el dia j (para llegar a tener c), por lo que sube mi ganancia.
+-Si en el día j-1 tengo c asteroides, significa que no opere en el dia j.
+
+**b)**
+AV(P,c,j) = ⊥ si c<0 || c>j
+
+            0 si j<1
+            
+            max( AV(P,c-1, j-1) - P[j], AV(P,c+1,j-1) + P[j], AV(P,c,j-1) )
+
+**c)** El dato
+
+**d)** 
+Resolución en C++
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int N;
+vector<int> P;
+vector<vector<int>> memoria;
+
+int AstroVoid(int c, int j){
+    //caso indefinido
+    if(c < 0 || c > j){
+        return -1;
+    }
+    //caso base
+    if(j < 1){
+        return 0;
+    }
+    // veo si ya resolví esta solución
+    if (memoria[c][j] != -1) {
+        return memoria[c][j];
+    } else {
+        //casos posibles
+        int comprar = AstroVoid(c-1,j-1) - P[j-1];
+        int vender = AstroVoid(c+1,j-1) + P[j-1];
+        int nada = AstroVoid(c,j-1);
+        //caso recursivo
+        memoria[c][j] = max(comprar, max(vender,nada));
+        return memoria[c][j];
+    }
+}
+
+
+int main() {
+    cin >> N;
+    memoria.resize(N+1,vector<int>(N+1,-1));
+    P.resize(N);
+    for(int i= 0; i< N; i++){
+        int elem;
+        cin >> elem;
+        P[i] = elem;
+    }
+    int res = AstroVoid(0,N);
+    if (res == -1) {
+        cout << "No es posible obtener ganancia neta." << endl;
+    } else {
+        cout << "La maxima ganancia neta es: " << res << endl;
+    }
+    return 0;
+}
+
+
+```
