@@ -428,8 +428,138 @@ int main() {
 
 ### Ejercicio 5
 
-### Ejercicio 6
+**b)**
 
+**d)** Tengo n*k estados, cada uno se calcula en O(1), entonces la complejidad es O(n*k)
+
+
+### Ejercicio 6
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <tuple>
+
+using namespace std;
+
+vector<int> B;
+int billetesMinimos;
+int excesoMinimo;
+pair<int,int> sol;
+//vector<vector<int>> memoria;
+
+int sumaElementos(vector<int> B){
+    int res = 0;
+    for(int i=0; i< B.size(); i++){
+        res+= B[i];
+    }
+    return res;
+}
+
+void minimoExceso(int c, int i, pair<int,int>& sol_parcial){
+    if(sumaElementos(B) < c){
+        sol_parcial.first = -1e9;
+        sol_parcial.second = -1e9;
+        sol = sol_parcial;
+    }
+    if(c <= 0){
+        int exceso = sol_parcial.first;
+        if(exceso < excesoMinimo){
+            excesoMinimo = exceso;
+        } else if(exceso == excesoMinimo){
+            if(sol_parcial.second < billetesMinimos){
+                billetesMinimos = sol_parcial.second;
+            }
+        }
+        sol_parcial.first = excesoMinimo;
+        sol_parcial.second = billetesMinimos;
+        sol = sol_parcial;
+    }
+    minimoExceso(c, i--, sol_parcial);
+    sol_parcial.first = sol_parcial.first + B[i];
+    sol_parcial.second = sol_parcial.second + 1;
+    minimoExceso(c - B[i],i--, sol_parcial);
+    //get<0>(sol_parcial)-= B[i];
+    // get<1>(sol_parcial)--;
+}
+
+
+int main() {
+    int N;
+    int c;
+    cin >> N;
+    cin >> c;
+    B.resize(N);
+    for(int i= 0; i<N; i++){
+        int elem;
+        cin >> elem;
+        B[i] = elem;
+    }
+    int billetesMinimos = 10000;
+    int excesoMinimo = 10000;
+    pair<int,int> ini = make_pair(0,0);
+    minimoExceso(c,N-1,ini);
+    cout << "Lo minimo que puedo pagar con los billetes es " << get<0>(sol) << " y la minima cantidad de billetes es " << get<1>(sol);
+}
+ ------------------------
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <tuple>
+
+using namespace std;
+
+vector<int> B;
+//int billetesMinimos;
+//int excesoMinimo;
+//vector<vector<int>> memoria;
+
+int sumaElementos(vector<int> B){
+    int res = 0;
+    for(int i=0; i< B.size(); i++){
+        res+= B[i];
+    }
+    return res;
+}
+
+pair<int,int> minimoExceso(int c, int i, int billetes, int exceso){
+    if(sumaElementos(B) < c){
+       return make_pair(-1e9,-1e9);
+    }
+    pair<int,int> con_billete = minimoExceso(c-B[i], i--, billetes++, exceso + B[i]);
+    pair<int,int> sin_billete = minimoExceso(c, i--, billetes, exceso);
+    if(c <= 0){
+        if(get<0>(sol_parcial) < excesoMinimo){
+            excesoMinimo = get<0>(sol_parcial);
+        } else if(get<0>(sol_parcial) == excesoMinimo){
+            if(get<1>(sol_parcial) < billetesMinimos){
+                billetesMinimos = get<1>(sol_parcial);
+            }
+        }
+
+}
+
+
+int main() {
+   int N;
+   int c;
+   cin >> N;
+   cin >> c;
+   B.resize(N);
+   for(int i= 0; i<N; i++){
+       int elem;
+       cin >> elem;
+       B[i] = elem;
+   }
+   int billetesMinimos = 10000;
+   int excesoMinimo = 10000;
+   pair<int,int> ini = make_pair(0,0);
+   minimoExceso(c,0,ini);
+   cout << "Lo minimo que puedo pagar con los billetes es " << get<0>(sol) << " y la minima cantidad de billetes es " << get<1>(sol);
+}
+
+```
 ### Ejercicio 7
 En este ejercicio tengo la compra/venta de asteroides con diferentes condiciones. Tengo que maxmizar las ganancias en base a lo que salen los asteroides cada día.
 
@@ -440,6 +570,7 @@ En el día j tengo c asteroides:
 -Si en el día j-1 tengo c asteroides, significa que no opere en el dia j.
 
 **b)**
+
 $$
 av(P, c, j) =
 \begin{cases}
@@ -449,7 +580,7 @@ av(P, c, j) =
 \end{cases}
 $$
 
-**c)** El dato
+**c)** El dato que es respuesta al problema es av(P, 0, |P|-1) (quiero ver cual es la maxima ganancia, si al finalizar el ultimo día tengo 0 asteroides). (Obs: el dia 1 es j=0, y el ultimo dia es j=|P|-1)). 
 
 **d)** 
 Resolución en C++
