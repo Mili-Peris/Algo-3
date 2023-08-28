@@ -440,11 +440,14 @@ En el día j tengo c asteroides:
 -Si en el día j-1 tengo c asteroides, significa que no opere en el dia j.
 
 **b)**
-AV(P,c,j) = ⊥ si c<0 || c>j
-
-            0 si j<1
-            
-            max( AV(P,c-1, j-1) - P[j], AV(P,c+1,j-1) + P[j], AV(P,c,j-1) )
+$$
+av(P, c, j) =
+\begin{cases}
+     indefinido & \text{si } c < 0 \lor j < c \\
+     0 & \text{si } j < 0 \\
+     max(av(P, c+1, j-1) + P[j], av(P, c-1, j-1) - P[j], av(P, c, j-1)) & \text{caso contrario}
+\end{cases}
+$$
 
 **c)** El dato
 
@@ -462,11 +465,11 @@ vector<vector<int>> memoria;
 
 int AstroVoid(int c, int j){
     //caso indefinido
-    if(c < 0 || c > j){
-        return -1;
+    if(c < 0 || (c > j+1 && c > 0)){
+        return -1e9;
     }
     //caso base
-    if(j < 1){
+    if(j < 0){
         return 0;
     }
     // veo si ya resolví esta solución
@@ -474,8 +477,8 @@ int AstroVoid(int c, int j){
         return memoria[c][j];
     } else {
         //casos posibles
-        int comprar = AstroVoid(c-1,j-1) - P[j-1];
-        int vender = AstroVoid(c+1,j-1) + P[j-1];
+        int comprar = AstroVoid(c-1,j-1) - P[j];
+        int vender = AstroVoid(c+1,j-1) + P[j];
         int nada = AstroVoid(c,j-1);
         //caso recursivo
         memoria[c][j] = max(comprar, max(vender,nada));
@@ -486,14 +489,14 @@ int AstroVoid(int c, int j){
 
 int main() {
     cin >> N;
-    memoria.resize(N+1,vector<int>(N+1,-1));
+    memoria.resize(N,vector<int>(N,-1));
     P.resize(N);
     for(int i= 0; i< N; i++){
         int elem;
         cin >> elem;
         P[i] = elem;
     }
-    int res = AstroVoid(0,N);
+    int res = AstroVoid(0,N-1);
     if (res == -1) {
         cout << "No es posible obtener ganancia neta." << endl;
     } else {
@@ -501,6 +504,5 @@ int main() {
     }
     return 0;
 }
-
 
 ```
