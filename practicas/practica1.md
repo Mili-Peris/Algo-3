@@ -457,10 +457,11 @@ int sumaElementos(vector<int> B){
 }
 
 void minimoExceso(int c, int i, pair<int,int>& sol_parcial){
-    if(sumaElementos(B) < c){
+    if(sumaElementos(B) < c || i<0){
         sol_parcial.first = -1e9;
         sol_parcial.second = -1e9;
         sol = sol_parcial;
+        return;
     }
     if(c <= 0){
         int exceso = sol_parcial.first;
@@ -471,18 +472,17 @@ void minimoExceso(int c, int i, pair<int,int>& sol_parcial){
                 billetesMinimos = sol_parcial.second;
             }
         }
-        sol_parcial.first = excesoMinimo;
-        sol_parcial.second = billetesMinimos;
-        sol = sol_parcial;
+        sol.first = excesoMinimo;
+        sol.second = billetesMinimos;
     }
-    minimoExceso(c, i--, sol_parcial);
+    minimoExceso(c, i- 1, sol_parcial);
     sol_parcial.first = sol_parcial.first + B[i];
     sol_parcial.second = sol_parcial.second + 1;
-    minimoExceso(c - B[i],i--, sol_parcial);
-    //get<0>(sol_parcial)-= B[i];
-    // get<1>(sol_parcial)--;
-}
+    minimoExceso(c - B[i],i - 1, sol_parcial);
+    sol_parcial.first = sol_parcial.first - B[i];
+    sol_parcial.second = sol_parcial.second - 1;
 
+}
 
 int main() {
     int N;
@@ -499,7 +499,8 @@ int main() {
     int excesoMinimo = 10000;
     pair<int,int> ini = make_pair(0,0);
     minimoExceso(c,N-1,ini);
-    cout << "Lo minimo que puedo pagar con los billetes es " << get<0>(sol) << " y la minima cantidad de billetes es " << get<1>(sol);
+    cout << "Lo minimo que puedo pagar con los billetes es " << sol.first << " y la minima cantidad de billetes es " << sol.second;
+    return 0;
 }
  ------------------------
 
@@ -511,8 +512,6 @@ int main() {
 using namespace std;
 
 vector<int> B;
-//int billetesMinimos;
-//int excesoMinimo;
 //vector<vector<int>> memoria;
 
 int sumaElementos(vector<int> B){
@@ -523,40 +522,41 @@ int sumaElementos(vector<int> B){
     return res;
 }
 
-pair<int,int> minimoExceso(int c, int i, int billetes, int exceso){
-    if(sumaElementos(B) < c){
-       return make_pair(-1e9,-1e9);
+pair<int,int> minimoExceso(int c, int i) {
+    if (i < 0 && c>0){
+        return make_pair(-1e9, -1e9);
     }
-    pair<int,int> con_billete = minimoExceso(c-B[i], i--, billetes++, exceso + B[i]);
-    pair<int,int> sin_billete = minimoExceso(c, i--, billetes, exceso);
-    if(c <= 0){
-        if(get<0>(sol_parcial) < excesoMinimo){
-            excesoMinimo = get<0>(sol_parcial);
-        } else if(get<0>(sol_parcial) == excesoMinimo){
-            if(get<1>(sol_parcial) < billetesMinimos){
-                billetesMinimos = get<1>(sol_parcial);
-            }
+    if (c <= 0) {
+        return make_pair(0, 0);
+    }
+    pair<int, int> con_billete_i = minimoExceso(c - B[i], i - 1);
+    pair<int, int> sin_billete_i = minimoExceso(c, i - 1);
+    if (con_billete_i.first+B[i] == sin_billete_i.first) {
+        if (con_billete_i.second+1 < sin_billete_i.second) {
+            return make_pair(con_billete_i.first+B[i], con_billete_i.second+1);
         }
-
+        return make_pair(sin_billete_i.first, sin_billete_i.second);
+    }
+    if (con_billete_i.first+B[i] < sin_billete_i.first) {
+        return make_pair(con_billete_i.first+B[i], con_billete_i.second+1);
+    }
+    return make_pair(sin_billete_i.first, sin_billete_i.second);
 }
 
-
-int main() {
-   int N;
-   int c;
-   cin >> N;
-   cin >> c;
-   B.resize(N);
-   for(int i= 0; i<N; i++){
-       int elem;
-       cin >> elem;
-       B[i] = elem;
-   }
-   int billetesMinimos = 10000;
-   int excesoMinimo = 10000;
-   pair<int,int> ini = make_pair(0,0);
-   minimoExceso(c,0,ini);
-   cout << "Lo minimo que puedo pagar con los billetes es " << get<0>(sol) << " y la minima cantidad de billetes es " << get<1>(sol);
+int main(){
+        int N;
+        int c;
+        cin >> N;
+        cin >> c;
+        B.resize(N);
+        for(int i= 0; i<N; i++){
+            int elem;
+            cin >> elem;
+            B[i] = elem;
+        }
+        pair<int,int> res = minimoExceso(c,N-1);
+        cout << "Lo minimo que puedo pagar con los billetes es " << res.first << " y la minima cantidad de billetes es " << res.second;
+        return 0;
 }
 
 ```
