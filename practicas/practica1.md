@@ -435,6 +435,7 @@ int main() {
 
 ### Ejercicio 6
 ```cpp
+ESTA FORMA NO FUNCIONO
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -458,8 +459,8 @@ int sumaElementos(vector<int> B){
 
 void minimoExceso(int c, int i, pair<int,int>& sol_parcial){
     if(sumaElementos(B) < c || i<0){
-        sol_parcial.first = -1e9;
-        sol_parcial.second = -1e9;
+        sol_parcial.first = 1e9;
+        sol_parcial.second = 1e9;
         sol = sol_parcial;
         return;
     }
@@ -503,6 +504,7 @@ int main() {
     return 0;
 }
  ------------------------
+ESTA FUNCIONA
 
 #include <iostream>
 #include <vector>
@@ -524,7 +526,7 @@ int sumaElementos(vector<int> B){
 
 pair<int,int> minimoExceso(int c, int i) {
     if (i < 0 && c>0){
-        return make_pair(-1e9, -1e9);
+        return make_pair(1e9, 1e9);
     }
     if (c <= 0) {
         return make_pair(0, 0);
