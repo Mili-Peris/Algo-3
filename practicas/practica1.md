@@ -434,6 +434,21 @@ int main() {
 
 
 ### Ejercicio 6
+
+**a)** 
+
+$$
+cc(B,c) = 
+\begin{cases}
+    (\infty, \infty) \\ \\ \\ \\ \\ \\ \\ \\ \\  \text{si } i=|B| \land c>0\\
+    (0,0) \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\ \\  \text{si } c\leq 0\\
+    min(min(cc({b2,...,bn}, c-b1).first+b1, cc({b2,...,bn}, c-b1).second+1), (cc({b2,...,bn}, c-b1).first, cc({b2,...,bn}, c-b1).second))) \text{caso contrario}
+\end{cases}
+$$
+
+**b)** y **c)**
+En b tendria que pasar los billetes como parametro, pero es esencialmente lo mismo.
+Implementación en C++
 ```cpp
 ESTA FORMA NO FUNCIONO
 #include <iostream>
@@ -560,8 +575,82 @@ int main(){
         cout << "Lo minimo que puedo pagar con los billetes es " << res.first << " y la minima cantidad de billetes es " << res.second;
         return 0;
 }
-
 ```
+
+**d)**
+
+Sobreposición de estados: cuando la cantidad de estados es mucho menor a la cantidad de llamados recursivos. O sea si
+$NP<< 2^{N} \leftrightarrow P<<2^{N}/N$
+con N=|B|. 
+Tendria que tener una estructura de memorización de tamaño N*P. Indexo segun la pocision en la que estoy de B y la cantidad que me queda poner.
+
+**e)**
+
+```cpp
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<int> B;
+vector<vector<pair<int,int>>> memoria;
+
+int sumaElementos(vector<int> B){
+    int res = 0;
+    for(int i=0; i< B.size(); i++){
+        res+= B[i];
+    }
+    return res;
+}
+
+pair<int,int> minimoExceso(int c, int i) {
+    if (i < 0 && c>0){
+        return make_pair(1e9, 1e9);
+    }
+    if (c <= 0) {
+        return make_pair(0, 0);
+    }
+    if (memoria[i][c].first != -1 || memoria[i][c].second != -1){
+        return memoria[i][c];
+    }
+    pair<int, int> con_billete_i = minimoExceso(c - B[i], i - 1);
+    pair<int, int> sin_billete_i = minimoExceso(c, i - 1);
+    if (con_billete_i.first+B[i] == sin_billete_i.first) {
+        if (con_billete_i.second+1 < sin_billete_i.second) {
+            memoria[i][c] = make_pair(con_billete_i.first+B[i], con_billete_i.second+1);
+        } else {
+            memoria[i][c] = make_pair(sin_billete_i.first, sin_billete_i.second);
+        }
+
+    } else if (con_billete_i.first+B[i] < sin_billete_i.first) {
+        memoria[i][c] = make_pair(con_billete_i.first+B[i], con_billete_i.second+1);
+    } else {
+        memoria[i][c] = make_pair(sin_billete_i.first, sin_billete_i.second);
+    }
+    return memoria[i][c];
+}
+
+int main(){
+    int N;
+    int c;
+    cin >> N;
+    cin >> c;
+    memoria.resize(N, vector<pair<int,int>>(c+1, make_pair(-1,-1)));
+    B.resize(N);
+    for(int i= 0; i<N; i++){
+        int elem;
+        cin >> elem;
+        B[i] = elem;
+    }
+    pair<int,int> res = minimoExceso(c,N-1);
+    cout << "Lo minimo que puedo pagar con los billetes es " << res.first << " y la minima cantidad de billetes es " << res.second;
+    return 0;
+}
+```
+
+**f)** 
+El llamado recursivo que lo resuelve es minimoExceso(c,N-1). La nueva complejidad se calcula como la cantidad de estados posibles * complejidad de calcular cada estado. Complejidad = O(NP)
+
 ### Ejercicio 7
 En este ejercicio tengo la compra/venta de asteroides con diferentes condiciones. Tengo que maxmizar las ganancias en base a lo que salen los asteroides cada día.
 
