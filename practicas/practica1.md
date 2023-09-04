@@ -729,3 +729,34 @@ int main() {
 
 ```
 ### Ejercicio 8
+
+#include <iostream>
+#include <vector>
+#include <algorithm>
+```cpp
+using namespace std;
+
+vector<int> C;
+int infinito = 1e9;
+
+int cortarVara(int i, int j, int c){
+    if((j-i) < c || c > C.size()){
+        return infinito;
+    }
+    return (j-i) + min(cortarVara(i,C[c],c++) + (C[c]-i), cortarVara(C[c],j,c++) + (j-C[c]));
+}
+
+int main(){
+    int N;
+    cin >> N;
+    C.resize(N);
+    for(int i=0; i<N; i++){
+        int elem;
+        cin >> elem;
+        C[i] = elem;
+    }
+    int res = cortarVara(0,N,0);
+    cout << "El minimo costo para cortar una madera en esos puntos es " << res;
+    return 0;
+}
+```
