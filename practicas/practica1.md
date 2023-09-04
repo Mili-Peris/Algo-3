@@ -730,10 +730,11 @@ int main() {
 ```
 ### Ejercicio 8
 
+```cpp
 #include <iostream>
 #include <vector>
 #include <algorithm>
-```cpp
+
 using namespace std;
 
 vector<int> C;
