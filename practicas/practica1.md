@@ -426,6 +426,8 @@ int main() {
 }
 ```
 
+## Programación Dinámica
+
 ### Ejercicio 5
 
 **b)**
@@ -739,16 +741,16 @@ using namespace std;
 
 vector<int> C;
 int infinito = 1e9;
+int N;
 
 int cortarVara(int i, int j, int c){
-    if((j-i) < c || c > C.size()){
+    if((c == N || c > (j-i)){
         return infinito;
     }
-    return (j-i) + min(cortarVara(i,C[c],c++) + (C[c]-i), cortarVara(C[c],j,c++) + (j-C[c]));
+    return (j-i) + min(cortarVara(i,C[c]-1,c++), cortarVara(C[c],j,c++));
 }
 
 int main(){
-    int N;
     cin >> N;
     C.resize(N);
     for(int i=0; i<N; i++){
@@ -761,3 +763,9 @@ int main(){
     return 0;
 }
 ```
+
+### Ejercicio 9
+
+### Ejercicio 10
+
+## Greedy
