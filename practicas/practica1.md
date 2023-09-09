@@ -843,6 +843,7 @@ using namespace std;
 
 vector<int> pesos;
 vector<int> soportan;
+vector<vector<int>> memoria;
 int infinito = 1e9;
 
 //en memoria voy a tener la vida que necesito para llegar a esa posicion
@@ -854,9 +855,13 @@ int apilarCajas (int aguanta, int i){
     if (i > pesos.size()-1){
         return infinito;
     }
+    if (memoria[aguanta][i] != -1){
+        return memoria[aguanta][i];
+    }
     int noAgregoCaja = apilarCajas(aguanta, i+1);
     int agregoCaja = apilarCajas(min(soportan[i], (aguanta - pesos[i])), i+1);
-    return max(noAgregoCaja, agregoCaja+1);
+    memoria[aguanta][i] = max(noAgregoCaja, agregoCaja+1);
+    return memoria[aguanta][i];
 }
 
 int main(){
@@ -878,6 +883,7 @@ int main(){
     for (int h=0; h< N; h++){
         sumaSoportes+= soportan[h];
     }
+    memoria.resize(sumaSoportes+1,vector<int>(N,-1));
     int res = apilarCajas(sumaSoportes, 0);
     cout << "La maxima cantidad de cajas que puedo apilar es " << res;
     return 0;
