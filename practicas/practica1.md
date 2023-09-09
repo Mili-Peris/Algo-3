@@ -832,7 +832,56 @@ int main(){
 }
 ```
 
-
 ### Ejercicio 10
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<int> pesos;
+vector<int> soportan;
+int infinito = 1e9;
+
+//en memoria voy a tener la vida que necesito para llegar a esa posicion
+
+int apilarCajas (int aguanta, int i){
+    if(soportan[i] > aguanta){
+        return 0;
+    }
+    if (i > pesos.size()-1){
+        return infinito;
+    }
+    int noAgregoCaja = apilarCajas(aguanta, i+1);
+    int agregoCaja = apilarCajas(min(soportan[i], (aguanta - pesos[i])), i+1);
+    return max(noAgregoCaja, agregoCaja+1);
+}
+
+int main(){
+    int N;
+    cin >> N;
+    pesos.resize(N);
+    soportan.resize(N);
+    for (int i=0; i< N; i++){
+        int elem;
+        cin >> elem;
+        pesos[i] = elem;
+    }
+    for (int j=0; j< N; j++){
+        int elem;
+        cin >> elem;
+        soportan[j] = elem;
+    }
+    int sumaSoportes = 0;
+    for (int h=0; h< N; h++){
+        sumaSoportes+= soportan[h];
+    }
+    int res = apilarCajas(sumaSoportes, 0);
+    cout << "La maxima cantidad de cajas que puedo apilar es " << res;
+    return 0;
+}
+```
 
 ## Greedy
