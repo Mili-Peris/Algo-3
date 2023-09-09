@@ -732,6 +732,19 @@ int main() {
 ```
 ### Ejercicio 8
 
+**b)**
+
+$$
+minCosto({k_{0},...,k_{n-1}}, i, j) =
+\begin{cases}
+     0 & \text{si } c < 0 \\
+     j - i + \min_{k_i \in C \atop 0 \leq i < n} \left( minCosto({k_{0},...,k_{i-1}}, i, k_{i}) + minCosto({k_{i+1},...,k_{n-1}}, k_{i}, j) \right) & \text{caso contrario}
+\end{cases}
+$$
+
+
+**c)**
+
 ```cpp
 #include <iostream>
 #include <vector>
@@ -744,13 +757,17 @@ int infinito = 1e9;
 int N;
 
 int cortarVara(int i, int j, int c){
-    if((c == N || c > (j-i)){
-        return infinito;
+    if(c == N || C[c] < i || C[c] > j){
+        return 0;
     }
-    return (j-i) + min(cortarVara(i,C[c]-1,c++), cortarVara(C[c],j,c++));
+    int cortarPorIzquierda = cortarVara(i,C[c],c + 1);
+    int cortarPorDerecha = cortarVara(C[c],j,c + 1);
+    return (j-i) + cortarPorIzquierda + cortarPorDerecha;
 }
 
 int main(){
+    int longVara;
+    cin >> longVara;
     cin >> N;
     C.resize(N);
     for(int i=0; i<N; i++){
@@ -758,13 +775,63 @@ int main(){
         cin >> elem;
         C[i] = elem;
     }
-    int res = cortarVara(0,N,0);
+    int res = cortarVara(0,longVara,0);
     cout << "El minimo costo para cortar una madera en esos puntos es " << res;
     return 0;
 }
 ```
 
 ### Ejercicio 9
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+vector<vector<int>> matriz;
+vector<vector<int>> memoria;
+int infinito = 1e9;
+int M;
+int N;
+//en memoria voy a tener la vida que necesito para llegar a esa posicion
+
+int minimaVida (int m, int n){
+    if (m == M || n == N){
+        return infinito;
+    }
+    if (m == M-1 && n == N-1){
+        return 0;
+    }
+    if (memoria[n][m] != -1){
+        return memoria[n][m];
+    }
+    int res = min(minimaVida(m+1,n), minimaVida(m,n+1));
+    if (res < 0){
+        return (1 - matriz[n][m]);
+    } else {
+        return (res - matriz[n][m]);
+    }
+}
+
+int main(){
+    cin >> M;
+    cin >> N;
+    matriz.resize(M, vector<int>(N));
+    for(int i=0; i<M; i++){
+        for(int j=0; j<N;j++){
+            int elem;
+            cin >> elem;
+            matriz[i][j] = elem;
+        }
+    }
+    memoria.resize(M, vector<int>(N,-1));
+    int rta = minimaVida(0,0);
+    cout << "La minima vida con la que hay que comenzar es " << rta;
+    return 0;
+}
+```
+
 
 ### Ejercicio 10
 
