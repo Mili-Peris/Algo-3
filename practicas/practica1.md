@@ -834,6 +834,18 @@ int main(){
 
 ### Ejercicio 10
 
+**a)** La idea con backtracking seria ir poniendo o no poniendo las cajas y devolver el maximo de estos resultados. Como voy en orden siempre se va a cumplir la resticcion de que esten apiladas ordenadamente y voy a ir chequeando que no se supere el peso que pueden soportar (para hacer esto voy a llamar siempre al minimo entre los soportes de todas las cajas que apile).
+
+**b)**
+
+$$
+apilarCajas(aguanta,i)_{w,s,sumaSoportes} =
+\begin{cases}
+    0 & \text{si } s[i] > aguanta \\
+    -\infty & \text{si } i > |P| - 1 \\
+    max(apilarCajas(aguanta, i+1), apilarCajas(min(s[i], aguanta-w[i]), i+1)) & \text{en otros casos}
+\end{cases}
+$$
 ```cpp
 #include <iostream>
 #include <vector>
@@ -891,3 +903,119 @@ int main(){
 ```
 
 ## Greedy
+
+### Ejercicio 13
+
+**b)** 
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <math.h>
+
+using namespace std;
+
+vector<int> A;
+int a;
+vector<int> B;
+int b;
+int infinito = 1e9;
+
+int maximasParejas(int i, int j){
+    int cantParejas = 0;
+    while (i < a && j < b){
+        if(abs((A[i]-B[i])) <= 1){
+            cantParejas++;
+            i++;
+            j++;
+        } else if(A[i] < B[i]){
+            i++;
+        } else {
+            j++;
+        }
+    }
+    return cantParejas;
+}
+
+int main(){
+    cin >> a;
+    A.resize(a);
+    for (int i=0; i<a; i++){
+        int elem;
+        cin >> elem;
+        A[i] = elem;
+    }
+    cin >> b;
+    B.resize(b);
+    for (int j=0; j<b; j++){
+        int elem;
+        cin >> elem;
+        B[j] = elem;
+    }
+    int res = maximasParejas(0,0);
+    cout << "La cantidad maxima de parejas que se pueden formar es " << res;
+    return 0;
+}
+```
+Complejidad: 
+* Temporal: O(N+M) 
+* Espacial: O(1)
+
+**c)**
+Para demostrar que el algoritmo es correcto, veo que 1) La solución es válida (todas las parejas tienen una diferencia de habilidad menor o igual a 1, no hay dos personas que esten en dos parejas, y todas las parejas tienen a una persona de cada grupo). 2) La solución es óptima
+
+
+1) La solución es válida ya que en cada paso me voy fijando si |el primer elemento del multiconjunto A - el primer elemento del multiconjunto B| es menor o igual a 1, si lo es sumo uno a la cantidad de parejas y aumento ambos indices, si no lo es (al estar ambos multiconjuntos ordenados) me voy a fijar que elemento es menor dado que este es el que voy a descartar (no puede pasar que, si aumento el indice del mayor numero luego coincidan ya que solo va a agrandar el numero y cada vez va a haber mas diferencia)
+
+2) Es óptima ya que
+
+
+### Ejercicio 14
+
+**a)**
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <math.h>
+#include <algorithm>
+
+using namespace std;
+
+vector<int> A;
+int a;
+int infinito = 1e9;
+
+int menorCostoSumas(int i){
+    int costo = 0;
+    sort(A.begin(), A.end());
+    while (i < a-1){
+        costo = costo + A[i] + A[i+1];
+        A[i+1] = costo;
+        i++;
+    }
+    return costo;
+}
+
+int main(){
+    cin >> a;
+    A.resize(a);
+    for (int i=0; i<a; i++){
+        int elem;
+        cin >> elem;
+        A[i] = elem;
+    }
+    int res = menorCostoSumas(0);
+    cout << "La cantidad maxima de parejas que se pueden formar es " << res;
+    return 0;
+}
+```
+Entonces la estrategia seria ordenar la lista ya que siempre me va a convenir sumar las 2 cosas mas chicas primero. Luego le voy a asignar a la posicion i+1 este resultado para sumarselo al procximo elemento.
+
+**b)** 
+
+1) La solución es válida: la solución es válida ya que estoy agarrando elementos de la lista siempre, y cualquier combinacion de estos va a ser válida.
+
+2) La solución es óptima : Es óptima ya que no hay otra forma de sumar los elementos de la lista que sea menor a la de mi algoritmo greedy.
+
+
