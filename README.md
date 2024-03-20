@@ -25,7 +25,7 @@ En el repositorio van a estar las Prácticas, Trabajos Prácticos y Ejercicios d
 * [Enunciado](https://github.com/Mili-Peris/Algo-3/blob/main/tp%C2%B4s/tp1_algo3_2c2023.pdf) y [Solución](https://github.com/Mili-Peris/Algo-3/blob/main/tp%C2%B4s/solucionTP1.md).
 
 **TP2:** sobre Algoritmos sobre grafos (Recorridos y propiedades topológicas y Arbol Generador Mínimo).
-* [Enunciado](https://github.com/Mili-Peris/Algo-3/blob/main/tp%C2%B4s/algo3_2c2023.pdf) y [Solución]().
+* [Enunciado](https://github.com/Mili-Peris/Algo-3/blob/main/tp%C2%B4s/algo3_2c2023.pdf) y [Solución](https://github.com/Mili-Peris/Algo-3/blob/main/tp%C2%B4s/soluci%C3%B3nTP2.md).
 
 **TP3:** sobre Algoritmos sobre grafos (Camino mínimo y Flujo).
- * [Enunciado](https://github.com/Mili-Peris/Algo-3/blob/main/tp%C2%B4s/tp3.pdf) y [Solución](). 
+ * [Enunciado](https://github.com/Mili-Peris/Algo-3/blob/main/tp%C2%B4s/tp3.pdf) y [Solución](https://github.com/Mili-Peris/Algo-3/blob/main/tp%C2%B4s/soluci%C3%B3nTP3.md). 
